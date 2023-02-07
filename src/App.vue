@@ -1,20 +1,32 @@
 <script setup>
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import socksGreenImage from './assets/images/socks_green.jpeg'
 import socksBlueImage from './assets/images/socks_blue.jpeg'
 const product = ref('Socks')
-const image = ref(socksGreenImage)
-// const image2 = ref(socksBlueImage)
-const inStock = ref(true)
+const brand = ref('Vue Mastery')
+const selectedVariant = ref(0)
 const details = ref(['50% cotton', '30% wool', '20% polyster'])
 const variants = ref([
-	{ id: 2234, color: 'Green', image: socksGreenImage },
-	{ id: 2235, color: 'Blue', image: socksBlueImage },
+	{ id: 2234, color: 'Green', image: socksGreenImage, quantity: 10 },
+	{ id: 2235, color: 'Blue', image: socksBlueImage, quantity: 0 },
 ])
 const cart = ref(0)
+
+const title = computed(() => {
+	return brand.value + ' ' + product.value
+})
+
+const image = computed(() => {
+	return variants.value[selectedVariant.value].image
+})
+
+const inStock = computed(() => {
+	return variants.value[selectedVariant.value].quantity > 0
+})
+
 const addToCart = () => ++cart.value
-const updateImage = variantImage => {
-	image.value = variantImage
+const updateSelectedVariant = index => {
+	selectedVariant.value = index
 }
 </script>
 
@@ -28,7 +40,7 @@ const updateImage = variantImage => {
 				<img v-bind:src="image" />
 			</div>
 			<div class="product-info">
-				<h1>{{ product }}</h1>
+				<h1>{{ title }}</h1>
 				<p v-if="inStock">In Stock</p>
 				<p v-else>Out of Stock</p>
 				<ul>
@@ -36,17 +48,17 @@ const updateImage = variantImage => {
 				</ul>
 				<div class="variants">
 					<button
-						class="variant button"
-						v-for="variant in variants"
+						class="variant color-circle"
+						v-for="(variant, index) in variants"
 						:key="variant.id"
-						:style="[{ 'background-color': variant.color }]"
-						@click="updateImage(variant.image)"
-					>
-						<!-- {{ variant.color }} -->
-					</button>
+						:style="{ backgroundColor: variant.color }"
+						@click="updateSelectedVariant(index)"
+					></button>
 				</div>
 				<button
 					class="add-to-cart button"
+					:class="{ disabledButton: !inStock }"
+					:disabled="!inStock"
 					@click="addToCart"
 				>
 					Add to Cart

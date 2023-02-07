@@ -6,7 +6,7 @@ body {
 }
 
 .button {
-	/* background-color: #39495c; */
+	background-color: #39495c;
 	border-radius: 5px;
 	font-size: 18px;
 	width: 160px;
@@ -27,8 +27,9 @@ body {
 	margin: 15px;
 	outline: none;
 	border: none;
+	cursor: pointer;
 }
-.variants > .variant.button {
+.variants > .variant {
 	margin-left: 0 !important;
 }
 
@@ -59,6 +60,8 @@ body {
 
 .disabledButton {
 	background-color: #d8d8d8;
+	color: rgb(115, 115, 115);
+	border: none;
 	cursor: not-allowed;
 }
 
